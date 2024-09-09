@@ -1,0 +1,18 @@
+.hidden{
+    display: none;
+}
+
+#tb-rules {
+    /* width: 100%; */
+    border-collapse: collapse;
+}
+#tb-rules, th, td {
+    border: 1px solid black;
+}
+#tb-rules th, td {
+    padding: 10px;
+    text-align: left;
+}
+#tb-rules tr.dragging {
+    background-color: #ccc;
+}

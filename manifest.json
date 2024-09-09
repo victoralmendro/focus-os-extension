@@ -1,0 +1,32 @@
+{
+    "name": "Focus OS",
+    "version": "0.0.0.0",
+    "manifest_version": 3,
+    "permissions": ["tabs", "activeTab", "background", "scripting", "alarms"],
+    "host_permissions": ["<all_urls>"],
+    "description": "An extension to boost your focus and stop bad habits.",
+    "icons": {
+        "16": "icons/128x128.jpg",
+        "32": "icons/128x128.jpg",
+        "48": "icons/128x128.jpg",
+        "128": "icons/128x128.jpg"
+    },
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "background": {
+        "service_worker": "background.js"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["pages/rules-page/page.html"],
+            "matches": ["<all_urls>"]
+        }
+    ],
+    "content_scripts": [
+        {
+          "matches": ["<all_urls>"],
+          "js": ["contentScript/blockerManager.js"]
+        }
+    ]
+}

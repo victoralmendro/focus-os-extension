@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus OS - White List</title>
+
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="container-main-actions">
+        <button type="button" id="btn-open-frm-whitelist">New Rule</button>
+    </div>
+    <form id="frm-whitelist-save" class="hidden">
+        <input type="hidden" name="id">
+        <div>
+            <label for="rule">Rule Regex</label>
+            <input type="text" name="rule">
+        </div>
+        <button id="btn-save-whitelist" type="button">
+            Save
+        </button>
+        <button id="btn-cancel-save-whitelist" type="button">
+            Cancel
+        </button>
+        <p id="result-whitelist-save" class="hidden"></p>
+    </form>
+    
+    <table id="tb-whitelist" class="table-draggable">
+        <thead>
+            <tr>
+                <th>Active?</th>
+                <th>Rule</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    Total Rules:
+                    <span id="lbl-total-rules">0</span>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <script src="whiteListPage.js"></script>
+    <script src="/utils/timeUtils.js"></script>
+    <script src="/database/localDatabase.js"></script>
+    <script src="/database/whiteListStore.js"></script>
+    <script src="/services/whiteListsService.js"></script>
+</body>
+</html>
