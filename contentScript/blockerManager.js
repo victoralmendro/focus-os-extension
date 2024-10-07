@@ -23,6 +23,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
     }
 
+    if (chrome.runtime.lastError) {
+        console.log("Error in message handling: ", chrome.runtime.lastError);
+    }
+
     sendResponse({});
 });
 
