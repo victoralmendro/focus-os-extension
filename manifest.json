@@ -2,7 +2,7 @@
     "name": "Focus OS",
     "version": "0.0.0.0",
     "manifest_version": 3,
-    "permissions": ["tabs", "activeTab", "background", "scripting", "alarms"],
+    "permissions": ["tabs", "activeTab", "background", "scripting", "alarms", "management"],
     "host_permissions": ["<all_urls>"],
     "description": "An extension to boost your focus and stop bad habits.",
     "icons": {

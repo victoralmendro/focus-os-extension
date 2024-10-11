@@ -12,7 +12,7 @@ var rulesRoutine;
 async function startRulesRoutine(){
     const localDatabase = new LocalDatabase();
     console.log("Loading DB...");
-    const dbConnection = await localDatabase.ensureDatabaseReady();
+    await localDatabase.ensureDatabaseReady();
     console.log("DB loaded");;
     const rulesStore = new RulesStore(localDatabase);
     const whiteListStore = new WhiteListStore(localDatabase);
@@ -132,7 +132,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
                     chrome.tabs.sendMessage(tab.id, { action: 'keepAlive' }, (response) => {
                         console.log(`Tab responded! ${new Date()}`);
 
-                        if(rulesRoutine == undefined){
+                        if(rulesRoutine == undefined || rulesRoutine == null){
                             startRulesRoutine();
                         }
                     });
@@ -140,4 +140,10 @@ chrome.alarms.onAlarm.addListener((alarm) => {
             });
         });
     }
+});
+
+chrome.management.onEnabled.addListener(()=>{
+    if(rulesRoutine == undefined || rulesRoutine == null){
+        startRulesRoutine();
+    } 
 });
