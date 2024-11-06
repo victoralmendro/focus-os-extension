@@ -9,6 +9,20 @@ importScripts("services/timeTableService.js");
 const MIN_INTERVAL_TO_CHECK_PAGE_IN_SECS = 1;
 var rulesRoutine;
 
+async function manageContentScript(activeTab){
+    const existingScripts = await chrome.scripting.getRegisteredContentScripts();
+    if(existingScripts.length == 0){
+        await chrome.scripting.executeScript({
+            target: { tabId: activeTab.id },
+            files: ["contentScript/blockerManager.js"]
+        });
+    }else{
+        await chrome.scripting.updateContentScripts([{
+            id: "blocker-manager"
+        }]);
+    }
+}
+
 async function startRulesRoutine(){
     const localDatabase = new LocalDatabase();
     console.log("Loading DB...");
@@ -18,10 +32,7 @@ async function startRulesRoutine(){
     const whiteListStore = new WhiteListStore(localDatabase);
     const timeTableStore = new TimeTableStore(localDatabase);
 
-    rulesRoutine = setInterval(async ()=>{
-
-        const activeRules = await rulesStore.select({isActive: true});
-        const activeWhiteList = await whiteListStore.select({isActive: true});
+    rulesRoutine = setInterval(()=>{
 
         chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
             if(tabs.length == 0)
@@ -36,32 +47,17 @@ async function startRulesRoutine(){
                     return;
                 }
 
-                const existingScripts = await chrome.scripting.getRegisteredContentScripts();
-                if(existingScripts.length == 0){
-                    await chrome.scripting.executeScript({
-                        target: { tabId: activeTab.id },
-                        files: ["contentScript/blockerManager.js"]
-                    });
-                }else{
-                    await chrome.scripting.updateContentScripts([{
-                        id: "blocker-manager"
-                    }]);
-                }
+                await manageContentScript(activeTab);
 
-            } catch (errorGeneratingURL) {
-                console.info(activeTab.url);
+            } catch (e) {
                 return;
             }
 
-            let dbRule = undefined;
-            let whiteListItem = undefined;
-            let modifiedTimeTable = {};
-
-            let todayStartEndOfDay = DateUtils.getInitialAndFinalDate(new Date());
+            const activeWhiteList = await whiteListStore.select({isActive: true});  
 
             for(i=0;i < activeWhiteList.length; i++){
                 
-                whiteListItem = activeWhiteList[i];
+                const whiteListItem = activeWhiteList[i];
                 const regexResult = new RegExp(whiteListItem.rule).test(activeTabUrl.href);
 
                 if(regexResult){
@@ -73,8 +69,13 @@ async function startRulesRoutine(){
                 }
             }
 
+            const activeRules = await rulesStore.select({isActive: true});
+
+            let modifiedTimeTable = {};
+            let todayStartEndOfDay = DateUtils.getInitialAndFinalDate(new Date());
+
             for(i=0;i < activeRules.length;i++){
-                dbRule = activeRules[i];
+                const dbRule = activeRules[i];
                 const regexResult = new RegExp(dbRule.rule).test(activeTabUrl.href);
 
                 if(regexResult){
