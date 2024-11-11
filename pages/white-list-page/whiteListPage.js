@@ -93,8 +93,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         if(data.rule == ""){
             return;
         }
+
+        const rule = RegexUtils.escapeStringForRegex(data.rule);
     
-        const result = await WhiteListService.save(data.id, data.rule, true);
+        const result = await WhiteListService.save(data.id, rule, true);
         if(result.status === "0"){
             showResultWhitelistSaveError(result.message);
         }else{

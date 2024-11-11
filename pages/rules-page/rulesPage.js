@@ -99,8 +99,10 @@ document.addEventListener('DOMContentLoaded', async function() {
         if(data.rule == ""){
             return;
         }
+
+        const rule = RegexUtils.escapeStringForRegex(data.rule);
     
-        const result = await RulesService.save(data.id, data.rule, TimeUtils.timeToSeconds(data.maxUsageHour, data.maxUsageMin, data.maxUsageSec), true);
+        const result = await RulesService.save(data.id, rule, TimeUtils.timeToSeconds(data.maxUsageHour, data.maxUsageMin, data.maxUsageSec), true);
         if(result.status === "0"){
             showResultRuleSaveError(result.message);
         }else{
@@ -136,8 +138,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     async function testRule(){
         var formData = new FormData(frmRuleTest);
         const data = Object.fromEntries(formData.entries());
+
+        const rule = RegexUtils.escapeStringForRegex(data.rule);
     
-        const success = new RegExp(data.rule, "gm").test(data.url);
+        const success = new RegExp(rule, "gm").test(data.url);
 
         if(success){
             showResultRuleTestError("This URL will be blocked")
