@@ -32,6 +32,8 @@ async function startRulesRoutine(){
     const whiteListStore = new WhiteListStore(localDatabase);
     const timeTableStore = new TimeTableStore(localDatabase);
 
+    clearInterval(rulesRoutine);
+
     rulesRoutine = setInterval(()=>{
 
         chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {

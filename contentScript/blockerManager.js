@@ -43,6 +43,8 @@ function createBlockerLayout(){
     newElement.style.display = 'flex';
     newElement.style.justifyContent = 'center';
     newElement.style.alignItems = 'center';
+    newElement.style.top = '0';
+    newElement.style.left = '0';
     newElement.setAttribute("version", CURRENT_VERSION);
 
     document.body.appendChild(newElement);
