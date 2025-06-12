@@ -1,6 +1,6 @@
 const LocalDatabase = function (){
     const DB_NAME = "Focus OS";
-    const DB_VERSION = 2;
+    const DB_VERSION = 3;
 
     let db;
 
@@ -44,12 +44,33 @@ const LocalDatabase = function (){
                 
         objectStore.createIndex("rule", "rule", { unique: false });
         objectStore.createIndex("isActive", "isActive", { unique: false });
+        objectStore.createIndex("order", "order", { unique: false });
         objectStore.createIndex("maxDailyUsageTimeSeconds", "maxDailyUsageTimeSeconds", { unique: false });
     }
 
     var upgradeStoreRules = (event) => {
         const transaction = event.target.transaction;
         const objectStore = transaction.objectStore("Rules");
+
+        if(event.oldVersion < 3){
+
+            if (!objectStore.indexNames.contains("order")) {
+                objectStore.createIndex("order", "order", { unique: false });
+    
+                objectStore.openCursor().onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const value = cursor.value;
+                        if (typeof value.order === "undefined") {
+                            value.order = 0;
+                            cursor.update(value);
+                        }
+                        cursor.continue();
+                    }
+                };
+            }
+        }
+
     }
 
     var createStoreTimeTable = (db) => {

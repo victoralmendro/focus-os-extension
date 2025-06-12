@@ -1,4 +1,8 @@
-document.addEventListener('DOMContentLoaded', async function() {
+let rulesPageState = {
+    rules: []
+};
+
+document.addEventListener('DOMContentLoaded', async function () {
     var btnSaveRule = document.getElementById("btn-save-rule");
     var btnTestRule = document.getElementById("btn-test-rule");
     var btnCancelTestRule = document.getElementById("btn-cancel-test-rule");
@@ -16,44 +20,44 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     configureDraggableTable();
 
-    btnOpenFrmRule.addEventListener("click", ()=>{
+    btnOpenFrmRule.addEventListener("click", () => {
         openFrmRule(undefined);
     });
 
-    btnOpenFrmRuleTest.addEventListener("click", ()=>{
+    btnOpenFrmRuleTest.addEventListener("click", () => {
         toggleContainerMainAction(false);
         toggleFrmRuleTest(true);
     });
-    
-    btnSaveRule.addEventListener("click", async ()=>{
+
+    btnSaveRule.addEventListener("click", async () => {
         await saveRule();
         loadRules();
     });
-    
+
     btnTestRule.addEventListener("click", testRule);
-    
-    btnCancelTestRule.addEventListener("click", ()=>{
+
+    btnCancelTestRule.addEventListener("click", () => {
         toggleFrmRuleTest(false);
         toggleContainerMainAction(true);
         hideResultRuleTestError();
     });
-    
-    btnCancelSaveRule.addEventListener("click", ()=>{
+
+    btnCancelSaveRule.addEventListener("click", () => {
         toggleFrmRule(false);
         toggleContainerMainAction(true);
     });
 
-    document.addEventListener("click", async (event)=>{
-        if(event.target.type === "button"){
-            if(event.target.hasAttribute("data-action")){
+    document.addEventListener("click", async (event) => {
+        if (event.target.type === "button") {
+            if (event.target.hasAttribute("data-action")) {
                 const dataAction = event.target.getAttribute("data-action");
                 const dataId = event.target.getAttribute("data-id");
 
-                if(dataAction === "rule-delete"){
-                    
+                if (dataAction === "rule-delete") {
+
                     const result = confirm("Are you sure you want to delete this rule?");
 
-                    if(result === true){
+                    if (result === true) {
                         await ruleDelete(dataId);
                         loadRules();
                         clearFrmSaveRule();
@@ -62,21 +66,21 @@ document.addEventListener('DOMContentLoaded', async function() {
                     return;
                 }
 
-                if(dataAction === "rule-edit"){
+                if (dataAction === "rule-edit") {
                     openFrmRule();
 
-                    const result = await RulesService.list({id: dataId});
+                    const result = await RulesService.list({ id: dataId });
 
-                    if(result.length > 0){
+                    if (result.length > 0) {
                         fillFrmRule(result[0]);
                     }
 
                     return;
                 }
 
-                if(dataAction == "rule-test"){
+                if (dataAction == "rule-test") {
                     const value = event.target.getAttribute("data-value");
-                    
+
                     toggleFrmRuleTest(true);
                     fillFrmRuleTest("", value);
                 }
@@ -85,83 +89,85 @@ document.addEventListener('DOMContentLoaded', async function() {
             }
         }
     });
-    
-    async function saveRule(){
+
+    async function saveRule() {
         clearResultTestRule();
-    
+
         var formData = new FormData(frmRuleSave);
         const data = Object.fromEntries(formData.entries());
 
-        if(data.maxUsageHour == "" || data.maxUsageMin == "" || data.maxUsageSec == ""){
+        if (data.maxUsageHour == "" || data.maxUsageMin == "" || data.maxUsageSec == "") {
             return;
         }
-        
-        if(data.rule == ""){
+
+        if (data.rule == "") {
             return;
         }
 
         const rule = RegexUtils.escapeStringForRegex(data.rule);
-    
+
         const result = await RulesService.save(data.id, rule, TimeUtils.timeToSeconds(data.maxUsageHour, data.maxUsageMin, data.maxUsageSec), true);
-        if(result.status === "0"){
+        if (result.status === "0") {
             showResultRuleSaveError(result.message);
-        }else{
+        } else {
             hideResultRuleSaveError();
             clearFrmSaveRule();
         }
     }
 
-    async function showResultRuleSaveError(message){
+    async function showResultRuleSaveError(message) {
         elemResultRuleSave.innerText = message;
         elemResultRuleSave.style.color = "red";
         elemResultRuleSave.classList.remove("hidden");
     }
 
-    async function hideResultRuleSaveError(){
+    async function hideResultRuleSaveError() {
         elemResultRuleSave.innerText = "";
         elemResultRuleSave.style.color = "";
         elemResultRuleSave.classList.add("hidden");
     }
 
-    async function showResultRuleTestError(message){
+    async function showResultRuleTestError(message) {
         elemResultRuleTest.innerText = message;
         elemResultRuleTest.style.color = "red";
         elemResultRuleTest.classList.remove("hidden");
     }
 
-    async function hideResultRuleTestError(){
+    async function hideResultRuleTestError() {
         elemResultRuleTest.innerText = "";
         elemResultRuleTest.style.color = "";
         elemResultRuleTest.classList.add("hidden");
     }
-    
-    async function testRule(){
+
+    async function testRule() {
         var formData = new FormData(frmRuleTest);
         const data = Object.fromEntries(formData.entries());
 
         const rule = RegexUtils.escapeStringForRegex(data.rule);
-    
+
         const success = new RegExp(rule, "gm").test(data.url);
 
-        if(success){
+        if (success) {
             showResultRuleTestError("This URL will be blocked")
-        }else{
+        } else {
             showResultRuleTestError("This URL won't be blocked by this rule")
         }
     }
-    
-    function clearResultTestRule(){
+
+    function clearResultTestRule() {
         elemResultRuleTest.innerText = "";
         elemResultRuleTest.classList.add("hidden");
     }
 
-    async function loadRules(){
+    async function loadRules() {
         const tbody = tbRules.getElementsByTagName("tbody")[0];
         tbody.innerHTML = "";
 
         const result = await RulesService.list();
-        
-        if(result.length == 0){
+
+        rulesPageState.rules = result;
+
+        if (result.length == 0) {
             return;
         }
 
@@ -169,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             const tr = document.createElement("tr");
             tr.setAttribute("data-id", dbRule.id);
             tr.setAttribute("draggable", true);
-            
+
             let td = document.createElement("td");
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
@@ -212,7 +218,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             btnTest.setAttribute("data-action", "rule-test");
             btnTest.setAttribute("data-value", dbRule.rule);
             td.appendChild(btnTest);
-            
+
             tr.appendChild(td);
 
             tbody.appendChild(tr);
@@ -221,27 +227,27 @@ document.addEventListener('DOMContentLoaded', async function() {
         lblTotalRules.innerText = result.length;
     }
 
-    async function ruleDelete(ruleId){
+    async function ruleDelete(ruleId) {
         const result = await RulesService.delete(ruleId);
 
-        if(result.status == 0){
+        if (result.status == 0) {
             alert(result.message);
         }
     }
 
-    function toggleFrmRule(show){
-        if(show){
+    function toggleFrmRule(show) {
+        if (show) {
             frmRuleSave.classList.remove("hidden");
-        }else{
+        } else {
             frmRuleSave.classList.add("hidden");
-        
+
             clearFrmSaveRule();
 
             hideResultRuleSaveError();
         }
     }
 
-    function clearFrmSaveRule(){
+    function clearFrmSaveRule() {
         const inpRule = frmRuleSave.querySelector("input[name='rule']");
         inpRule.value = "";
 
@@ -258,18 +264,18 @@ document.addEventListener('DOMContentLoaded', async function() {
         maxUsageSec.value = "";
     }
 
-    function toggleContainerMainAction(show){
-        if(show){
+    function toggleContainerMainAction(show) {
+        if (show) {
             elemContainerMainActions.classList.remove("hidden");
-        }else{
+        } else {
             elemContainerMainActions.classList.add("hidden");
         }
     }
 
-    function toggleFrmRuleTest(show){
-        if(show){
+    function toggleFrmRuleTest(show) {
+        if (show) {
             frmRuleTest.classList.remove("hidden");
-        }else{
+        } else {
             frmRuleTest.classList.add("hidden");
 
             const inpUrl = frmRuleTest.querySelector("input[name='url']");
@@ -280,17 +286,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     }
 
-    function openFrmRule(rule){
+    function openFrmRule(rule) {
         toggleContainerMainAction(false);
         toggleFrmRule(true);
 
-        if(rule){
+        if (rule) {
             const inpRule = frmRuleSave.querySelector("input[name='rule']");
             inpRule.value = rule;
         }
     }
 
-    function fillFrmRule(dbRule){
+    function fillFrmRule(dbRule) {
         const inpId = frmRuleSave.querySelector("input[name='id']");
         inpId.value = dbRule.id;
 
@@ -298,7 +304,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         inpRule.value = RegexUtils.unscapeStringForRegex(dbRule.rule);
 
         const time = TimeUtils.secondsToTime(dbRule.maxDailyUsageTimeSeconds);
-        
+
         const inpMaxUsageHour = frmRuleSave.querySelector("input[name='maxUsageHour']");
         inpMaxUsageHour.value = time.hours;
 
@@ -309,7 +315,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         inpMaxUsageSec.value = time.seconds;
     }
 
-    function fillFrmRuleTest(url, rule){
+    function fillFrmRuleTest(url, rule) {
         const inpUrl = frmRuleTest.querySelector("input[name='url']");
         inpUrl.value = url;
 
@@ -317,7 +323,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         inpRule.value = rule;
     }
 
-    function configureDraggableTable(){
+    function configureDraggableTable() {
         const tbody = tbRules.querySelector('tbody');
         tbody.querySelectorAll('tr').forEach(row => {
             row.addEventListener('dragstart', (e) => {
@@ -326,18 +332,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                     row.classList.add('dragging');
                 }, 0);
             });
-    
+
             row.addEventListener('dragend', () => {
                 setTimeout(() => {
                     row.classList.remove('dragging');
                     draggedRow = null;
+
+                    updateRulesOrderFromTable();
                 }, 0);
             });
-    
+
             row.addEventListener('dragover', (e) => {
                 e.preventDefault();
                 const targetRow = getDragAfterElement(tbody, e.clientY);
-                
+
                 if (targetRow === null) {
                     tbody.appendChild(draggedRow);
                 } else {
@@ -361,7 +369,21 @@ document.addEventListener('DOMContentLoaded', async function() {
         }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
-    loadRules().then(()=>{
+    async function updateRulesOrderFromTable() {
+        const tbody = tbRules.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        rows.forEach((row, index) => {
+            const id = row.getAttribute('data-id');
+            const rule = rulesPageState.rules.find(r => r.id == id);
+            if (rule) {
+                rule.order = index;
+            }
+        });
+
+        const result = await RulesService.updateMany(rulesPageState.rules);
+    }
+
+    loadRules().then(() => {
         configureDraggableTable();
     });
 });
