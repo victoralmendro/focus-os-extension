@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         inpId.value = dbWhitelist.id;
 
         const inpRule = frmWhitelistSave.querySelector("input[name='rule']");
-        inpRule.value = dbWhitelist.rule;
+        inpRule.value = RegexUtils.unscapeStringForRegex(dbWhitelist.rule);
     }
 
     function fillFrmWhitelistTest(url, whitelist){

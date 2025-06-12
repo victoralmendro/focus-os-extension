@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         inpId.value = dbRule.id;
 
         const inpRule = frmRuleSave.querySelector("input[name='rule']");
-        inpRule.value = dbRule.rule;
+        inpRule.value = RegexUtils.unscapeStringForRegex(dbRule.rule);
 
         const time = TimeUtils.secondsToTime(dbRule.maxDailyUsageTimeSeconds);
         
