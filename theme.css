@@ -1,0 +1,706 @@
+/* design-system.css */
+
+/* 1. Design Tokens */
+:root {
+  /* Tipografia */
+  --font-family-sans: "SF Pro Text", system-ui, sans-serif;
+  --font-size-base: 16px;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* Cores – Light Mode */
+  --color-bg-default: #FFFFFF;
+  --color-bg-elevated: #F5F5F7;
+  --color-text-default: #1C1C1E;
+  --color-text-secondary: #3C3C4399;
+  --color-accent: #0A84FF;
+  --color-destructive: #FF375F;
+  --color-border: #C7C7CC;
+
+  /* Espaçamentos */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+
+  /* Efeitos */
+  --shadow-level-1: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-level-2: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  /* Grid */
+  --grid-columns: 12;
+  --grid-gutter: 16px;
+
+  /* Breakpoints */
+  --bp-mobile: 600px;
+  --bp-tablet: 1024px;
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg-default: #1C1C1E;
+    --color-bg-elevated: #2C2C2E;
+    --color-text-default: #FFFFFF;
+    --color-text-secondary: #EBEBF599;
+    --color-border: #3C3C4399;
+  }
+
+  .table th,
+  .table td {
+    border-color: #3C3C4399;
+    /* adapta a cor de borda no Dark Mode */
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* 2. Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-sans);
+  color: var(--color-text-default);
+  background-color: var(--color-bg-default);
+  line-height: 1.4;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 3. Typography */
+.h1 {
+  font-size: 2.125rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.h2 {
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-medium);
+}
+
+.h3 {
+  font-size: 1.375rem;
+  font-weight: var(--font-weight-regular);
+}
+
+.p {
+  font-size: 1rem;
+  font-weight: var(--font-weight-regular);
+}
+
+.small {
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-regular);
+}
+
+/* 4. Utility Classes */
+.spacing {
+  margin: var(--spacing-md);
+}
+
+/* 5. Grid Layout */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--spacing-md);
+  padding-right: var(--spacing-md);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: calc(-1 * var(--grid-gutter) / 2);
+  margin-right: calc(-1 * var(--grid-gutter) / 2);
+}
+
+.col {
+  padding-left: calc(var(--grid-gutter) / 2);
+  padding-right: calc(var(--grid-gutter) / 2);
+  flex: 1 1 0;
+}
+
+/* 6. Buttons */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: var(--font-weight-medium);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 200ms, box-shadow 200ms;
+}
+
+.button-primary {
+  background-color: var(--color-accent);
+  color: #fff;
+  box-shadow: var(--shadow-level-1);
+}
+
+.button-primary:hover {
+  background-color: #006FE6;
+  box-shadow: var(--shadow-level-2);
+}
+
+.button-secondary {
+  background-color: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+
+.button-destructive {
+  background-color: var(--color-destructive);
+  color: #fff;
+}
+
+.button-icon {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+}
+
+/* 7. Form Controls */
+.input-text {
+  padding: var(--spacing-sm);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: var(--color-bg-default);
+  color: var(--color-text-default);
+  transition:
+    border-color 200ms,
+    box-shadow 200ms,
+    background-color 200ms;
+}
+
+.input-text-block {
+  width: 100%;
+}
+
+.input-text:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(10, 132, 255, 0.2);
+}
+
+.input-group {
+  display: inline-flex;
+}
+
+.input-group .input-text {
+  flex: 1 1 auto;
+  margin: 0;
+  border-radius: 0;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.input-group .input-text:not(:last-child) {
+  border-right: none;
+}
+
+.input-group .input-text:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.input-group .input-text:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.input-group .input-text:focus {
+  outline: none;
+  border: none;
+  box-shadow: inset 0 0 0 1px var(--color-accent),
+              0 0 0 3px rgba(10, 132, 255, 0.2);
+}
+
+.input-group .input-text::placeholder {
+  color: var(--color-text-secondary);
+}
+
+.checkbox,
+.radio {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-accent);
+}
+
+.switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  -webkit-appearance: none;
+  background-color: #C7C7CC;
+  border-radius: 14px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 200ms;
+}
+
+.switch:checked {
+  background-color: var(--color-accent);
+}
+
+.switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 200ms;
+}
+
+.switch:checked::before {
+  transform: translateX(22px);
+}
+
+/* 8. Navigation */
+.sidebar {
+  width: 240px;
+  background-color: var(--color-bg-elevated);
+  box-shadow: var(--shadow-level-1);
+}
+
+.sidebar .nav-item {
+  padding: var(--spacing-md);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-default);
+  text-decoration: none;
+  transition: background-color 200ms;
+}
+
+.sidebar .nav-item.active,
+.sidebar .nav-item:hover {
+  background-color: var(--color-bg-default);
+}
+
+.tab-bar {
+  display: flex;
+  background-color: var(--color-bg-elevated);
+  backdrop-filter: blur(10px);
+}
+
+.tab-bar .tab-item {
+  flex: 1;
+  text-align: center;
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  position: relative;
+}
+
+.tab-bar .tab-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 20%;
+  width: 60%;
+  height: 2px;
+  background-color: var(--color-accent);
+  border-radius: 1px;
+  transition: width 200ms;
+}
+
+/* 9. Modals & Popovers */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(28, 28, 30, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  background-color: var(--color-bg-default);
+  border-radius: 12px;
+  box-shadow: var(--shadow-level-2);
+  max-width: 500px;
+  width: 90%;
+  padding: var(--spacing-lg);
+  animation: fadeIn 200ms ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.popover {
+  position: absolute;
+  background-color: var(--color-bg-default);
+  border-radius: 8px;
+  box-shadow: var(--shadow-level-2);
+  padding: var(--spacing-md);
+  animation: popFade 200ms ease-out;
+}
+
+@keyframes popFade {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 10. Accessibility Helpers */
+.focus-outline:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* 11. Tabelas */
+.table-block {
+  width: 100%;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+
+  /* Borda externa */
+  border: 1px solid var(--color-border);
+
+  font-size: 1rem;
+  color: var(--color-text-default);
+}
+
+.table th,
+.table td {
+  padding: var(--spacing-sm) var(--spacing-md);
+
+  /* Borda interna igual à externa */
+  border-bottom: 1px solid var(--color-border);
+
+  text-align: left;
+}
+
+/* Remove borda inferior na última linha */
+.table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table thead {
+  background-color: var(--color-bg-elevated);
+}
+
+.table th {
+  font-weight: var(--font-weight-medium);
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.table caption {
+  caption-side: bottom;
+  padding: var(--spacing-sm);
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+/* 12. Button Group */
+.button-group {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  /* mesmo border-radius dos botões */
+  overflow: hidden;
+}
+
+.button-group .button {
+  margin: 0;
+  /* remove espaçamentos padrão */
+  border-radius: 0;
+  /* reset das bordas individuais */
+  border: none;
+  /* já há borda no container */
+  flex: 1 1 auto;
+}
+
+.button-group .button:not(:last-child) {
+  border-right: 1px solid var(--color-border);
+  /* divisor entre botões */
+}
+
+/* 14. Spacing Utilities */
+
+/* Margin All Sides */
+.m-xs {
+  margin: var(--spacing-xs) !important;
+}
+
+.m-sm {
+  margin: var(--spacing-sm) !important;
+}
+
+.m-md {
+  margin: var(--spacing-md) !important;
+}
+
+.m-lg {
+  margin: var(--spacing-lg) !important;
+}
+
+/* Margin Vertical / Horizontal */
+.my-xs {
+  margin-top: var(--spacing-xs) !important;
+  margin-bottom: var(--spacing-xs) !important;
+}
+
+.my-sm {
+  margin-top: var(--spacing-sm) !important;
+  margin-bottom: var(--spacing-sm) !important;
+}
+
+.my-md {
+  margin-top: var(--spacing-md) !important;
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.my-lg {
+  margin-top: var(--spacing-lg) !important;
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+.mx-xs {
+  margin-left: var(--spacing-xs) !important;
+  margin-right: var(--spacing-xs) !important;
+}
+
+.mx-sm {
+  margin-left: var(--spacing-sm) !important;
+  margin-right: var(--spacing-sm) !important;
+}
+
+.mx-md {
+  margin-left: var(--spacing-md) !important;
+  margin-right: var(--spacing-md) !important;
+}
+
+.mx-lg {
+  margin-left: var(--spacing-lg) !important;
+  margin-right: var(--spacing-lg) !important;
+}
+
+/* Margin Individual Sides */
+.mt-xs {
+  margin-top: var(--spacing-xs) !important;
+}
+
+.mr-xs {
+  margin-right: var(--spacing-xs) !important;
+}
+
+.mb-xs {
+  margin-bottom: var(--spacing-xs) !important;
+}
+
+.ml-xs {
+  margin-left: var(--spacing-xs) !important;
+}
+
+.mt-sm {
+  margin-top: var(--spacing-sm) !important;
+}
+
+.mr-sm {
+  margin-right: var(--spacing-sm) !important;
+}
+
+.mb-sm {
+  margin-bottom: var(--spacing-sm) !important;
+}
+
+.ml-sm {
+  margin-left: var(--spacing-sm) !important;
+}
+
+.mt-md {
+  margin-top: var(--spacing-md) !important;
+}
+
+.mr-md {
+  margin-right: var(--spacing-md) !important;
+}
+
+.mb-md {
+  margin-bottom: var(--spacing-md) !important;
+}
+
+.ml-md {
+  margin-left: var(--spacing-md) !important;
+}
+
+.mt-lg {
+  margin-top: var(--spacing-lg) !important;
+}
+
+.mr-lg {
+  margin-right: var(--spacing-lg) !important;
+}
+
+.mb-lg {
+  margin-bottom: var(--spacing-lg) !important;
+}
+
+.ml-lg {
+  margin-left: var(--spacing-lg) !important;
+}
+
+/* Padding All Sides */
+.p-xs {
+  padding: var(--spacing-xs) !important;
+}
+
+.p-sm {
+  padding: var(--spacing-sm) !important;
+}
+
+.p-md {
+  padding: var(--spacing-md) !important;
+}
+
+.p-lg {
+  padding: var(--spacing-lg) !important;
+}
+
+/* Padding Vertical / Horizontal */
+.py-xs {
+  padding-top: var(--spacing-xs) !important;
+  padding-bottom: var(--spacing-xs) !important;
+}
+
+.py-sm {
+  padding-top: var(--spacing-sm) !important;
+  padding-bottom: var(--spacing-sm) !important;
+}
+
+.py-md {
+  padding-top: var(--spacing-md) !important;
+  padding-bottom: var(--spacing-md) !important;
+}
+
+.py-lg {
+  padding-top: var(--spacing-lg) !important;
+  padding-bottom: var(--spacing-lg) !important;
+}
+
+.px-xs {
+  padding-left: var(--spacing-xs) !important;
+  padding-right: var(--spacing-xs) !important;
+}
+
+.px-sm {
+  padding-left: var(--spacing-sm) !important;
+  padding-right: var(--spacing-sm) !important;
+}
+
+.px-md {
+  padding-left: var(--spacing-md) !important;
+  padding-right: var(--spacing-md) !important;
+}
+
+.px-lg {
+  padding-left: var(--spacing-lg) !important;
+  padding-right: var(--spacing-lg) !important;
+}
+
+/* Padding Individual Sides */
+.pt-xs {
+  padding-top: var(--spacing-xs) !important;
+}
+
+.pr-xs {
+  padding-right: var(--spacing-xs) !important;
+}
+
+.pb-xs {
+  padding-bottom: var(--spacing-xs) !important;
+}
+
+.pl-xs {
+  padding-left: var(--spacing-xs) !important;
+}
+
+.pt-sm {
+  padding-top: var(--spacing-sm) !important;
+}
+
+.pr-sm {
+  padding-right: var(--spacing-sm) !important;
+}
+
+.pb-sm {
+  padding-bottom: var(--spacing-sm) !important;
+}
+
+.pl-sm {
+  padding-left: var(--spacing-sm) !important;
+}
+
+.pt-md {
+  padding-top: var(--spacing-md) !important;
+}
+
+.pr-md {
+  padding-right: var(--spacing-md) !important;
+}
+
+.pb-md {
+  padding-bottom: var(--spacing-md) !important;
+}
+
+.pl-md {
+  padding-left: var(--spacing-md) !important;
+}
+
+.pt-lg {
+  padding-top: var(--spacing-lg) !important;
+}
+
+.pr-lg {
+  padding-right: var(--spacing-lg) !important;
+}
+
+.pb-lg {
+  padding-bottom: var(--spacing-lg) !important;
+}
+
+.pl-lg {
+  padding-left: var(--spacing-lg) !important;
+}

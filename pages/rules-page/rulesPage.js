@@ -179,6 +179,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             let td = document.createElement("td");
             let checkbox = document.createElement("input");
             checkbox.type = "checkbox";
+            checkbox.classList.add("checkbox");
             checkbox.checked = dbRule.isActive;
             checkbox.disabled = true;
             td.appendChild(checkbox);
@@ -198,26 +199,36 @@ document.addEventListener('DOMContentLoaded', async function () {
             tr.appendChild(td);
 
             td = document.createElement("td");
+            let group = document.createElement("div");
+            group.classList.add("button-group");
+            td.appendChild(group);
+
             let btnDelete = document.createElement("button");
             btnDelete.type = "button";
             btnDelete.innerText = "X";
+            btnDelete.classList.add("button");
             btnDelete.setAttribute("data-action", "rule-delete");
             btnDelete.setAttribute("data-id", dbRule.id);
-            td.appendChild(btnDelete);
+            btnDelete.setAttribute("title", "delete rule");
+            group.appendChild(btnDelete);
 
             let btnEdit = document.createElement("button");
             btnEdit.type = "button";
             btnEdit.innerText = "E";
+            btnEdit.classList.add("button");
             btnEdit.setAttribute("data-action", "rule-edit");
             btnEdit.setAttribute("data-id", dbRule.id);
-            td.appendChild(btnEdit);
+            btnEdit.setAttribute("title", "edit rule");
+            group.appendChild(btnEdit);
 
             let btnTest = document.createElement("button");
             btnTest.type = "button";
             btnTest.innerText = "T";
+            btnTest.classList.add("button");
             btnTest.setAttribute("data-action", "rule-test");
             btnTest.setAttribute("data-value", dbRule.rule);
-            td.appendChild(btnTest);
+            btnTest.setAttribute("title", "test rule");
+            group.appendChild(btnTest);
 
             tr.appendChild(td);
 

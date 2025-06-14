@@ -1,77 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus OS - Rules</title>
 
     <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="/theme.css">
 </head>
+
 <body>
-    <div id="container-main-actions">
-        <button type="button" id="btn-open-frm-rule">New Rule</button>
-        <button type="button" id="btn-open-frm-rule-test">Test Rule</button>
+    <div class="container spacing">
+        <div id="container-main-actions" class="mb-sm">
+            <button type="button" id="btn-open-frm-rule" class="button button-primary mr-xs">New Rule</button>
+            <button type="button" id="btn-open-frm-rule-test" class="button">Test Rule</button>
+        </div>
+        <form id="frm-rule-save" class="hidden mb-sm">
+            <input type="hidden" name="id">
+            <div class="row mb-sm">
+                <div class="col">
+                    <label for="rule" class="mr-sm">Rule Regex</label>
+                    <input type="text" name="rule" class="input-text">
+                </div>
+            </div>
+            <div class="row mb-sm">
+                <div class="col">
+                    <label for="maxUsageHour" class="mr-sm">Daily Time Limit</label>
+                    <div class="input-group">
+                        <input type="number" min="0" name="maxUsageHour" placeholder="hh" maxlength="2"
+                            class="input-text">
+                        <input type="number" min="0" name="maxUsageMin" placeholder="mm" maxlength="2"
+                            class="input-text">
+                        <input type="number" min="0" name="maxUsageSec" placeholder="ss" maxlength="2"
+                            class="input-text">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button id="btn-save-rule" type="button" class="button button-primary mr-xs">
+                        Save
+                    </button>
+                    <button id="btn-cancel-save-rule" type="button" class="button">
+                        Cancel
+                    </button>
+                    <p id="result-rule-save" class="hidden"></p>
+                </div>
+            </div>
+        </form>
+
+        <form id="frm-rule-test" class="hidden mb-sm">
+            <input type="hidden" name="id">
+            <div class="row mb-sm">
+                <div class="col">
+                    <label for="url" class="mr-sm">URL to test</label>
+                    <input type="text" name="url" class="input-text">
+                </div>
+            </div>
+            <div class="row mb-sm">
+                <div class="col">
+                    <label for="rule" class="mr-sm">Rule Regex</label>
+                    <input type="text" name="rule" class="input-text">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button id="btn-test-rule" type="button" class="button button-primary mr-xs">
+                        Test Rule
+                    </button>
+                    <button id="btn-cancel-test-rule" type="button" class="button">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+            <p id="result-rule-test" class="hidden"></p>
+        </form>
+
+        <table id="tb-rules" class="table-draggable table table-block">
+            <thead>
+                <tr>
+                    <th>Active?</th>
+                    <th>Rule</th>
+                    <th>Daily Usage Limit</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4">
+                        Total Rules:
+                        <span id="lbl-total-rules">0</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
     </div>
-    <form id="frm-rule-save" class="hidden">
-        <input type="hidden" name="id">
-        <div>
-            <label for="rule">Rule Regex</label>
-            <input type="text" name="rule">
-        </div>
-        <div>
-            <label for="maxUsageHour">Daily Time Limit</label>
-            <input type="number" min="0" name="maxUsageHour" maxlength="2">
-            <input type="number" min="0" name="maxUsageMin" maxlength="2">
-            <input type="number" min="0" name="maxUsageSec" maxlength="2">
-        </div>
-        <button id="btn-save-rule" type="button">
-            Save
-        </button>
-        <button id="btn-cancel-save-rule" type="button">
-            Cancel
-        </button>
-        <p id="result-rule-save" class="hidden"></p>
-    </form>
-
-    <form id="frm-rule-test" class="hidden">
-        <input type="hidden" name="id">
-        <div>
-            <label for="url">URL to test</label>
-            <input type="text" name="url">
-        </div>
-        <div>
-            <label for="rule">Rule Regex</label>
-            <input type="text" name="rule">
-        </div>
-        <button id="btn-test-rule" type="button">
-            Test Rule
-        </button>
-        <button id="btn-cancel-test-rule" type="button">
-            Cancel
-        </button>
-        <p id="result-rule-test" class="hidden"></p>
-    </form>
-
-
-    <table id="tb-rules" class="table-draggable">
-        <thead>
-            <tr>
-                <th>Active?</th>
-                <th>Rule</th>
-                <th>Daily Usage Limit</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-            <tr>
-                <td>
-                    Total Rules:
-                    <span id="lbl-total-rules">0</span>
-                </td>
-            </tr>
-        </tfoot>
-    </table>
+    <script src="/components/loadingButton.js"></script>
     <script src="rulesPage.js"></script>
     <script src="/utils/timeUtils.js"></script>
     <script src="/utils/regexUtils.js"></script>
@@ -79,4 +105,5 @@
     <script src="/database/rulesStore.js"></script>
     <script src="/services/rulesService.js"></script>
 </body>
+
 </html>
