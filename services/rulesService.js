@@ -61,14 +61,27 @@ const RulesService = {
     /**
      * Retrieves all rules from the RulesStore.
      * 
+     * @param {Object} filters - Filtros para a busca.
+     * @param {string} [orderBy] - Campo para ordenar.
+     * @param {string} [orderDirection="asc"] - "asc" ou "desc".
      * @returns {Promise<Array>} - A promise that resolves to an array of all rules.
      */
-    list: async (filters = {}) => {
+    list: async (filters = {}, orderBy, orderDirection = "asc") => {
         const rulesStore = new RulesStore(
             new LocalDatabase()
         );
 
-        return await rulesStore.select(filters);
+        let results = await rulesStore.select(filters);
+
+        if (orderBy) {
+            results = results.sort((a, b) => {
+                if (a[orderBy] < b[orderBy]) return orderDirection === "asc" ? -1 : 1;
+                if (a[orderBy] > b[orderBy]) return orderDirection === "asc" ? 1 : -1;
+                return 0;
+            });
+        }
+
+        return results;
     },
     /**
     * Deletes a rule from the RulesStore by its ID.

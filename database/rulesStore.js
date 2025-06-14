@@ -1,7 +1,7 @@
 const RulesStore = function(localDatabase){
     const STORE_NAME = "Rules";
 
-    this.insert = async function(rule, maxDailyUsageTimeSeconds, isActive) {
+    this.insert = async function(rule, maxDailyUsageTimeSeconds, isActive, order = 0) {
         return new Promise(async (resolve, reject) => {
             let db;
         
@@ -26,7 +26,8 @@ const RulesStore = function(localDatabase){
                 id: crypto.randomUUID(),
                 rule: rule,
                 isActive: isActive,
-                maxDailyUsageTimeSeconds: maxDailyUsageTimeSeconds
+                maxDailyUsageTimeSeconds: maxDailyUsageTimeSeconds,
+                order: order
             };
         
             const request = objectStore.add(entry);
@@ -37,7 +38,7 @@ const RulesStore = function(localDatabase){
         });
     }
     
-    this.update = async function(id, rule, maxDailyUsageTimeSeconds, isActive) {
+    this.update = async function(id, rule, maxDailyUsageTimeSeconds, isActive, order) {
         return new Promise(async (resolve, reject) => {
             let db;
         
@@ -68,6 +69,7 @@ const RulesStore = function(localDatabase){
                     entry.rule = rule;
                     entry.isActive = isActive;
                     entry.maxDailyUsageTimeSeconds = maxDailyUsageTimeSeconds;
+                    entry.order = order;
             
                     const updateRequest = objectStore.put(entry);
             

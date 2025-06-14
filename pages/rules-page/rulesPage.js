@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const tbody = tbRules.getElementsByTagName("tbody")[0];
         tbody.innerHTML = "";
 
-        const result = await RulesService.list();
+        const result = await RulesService.list([], "order", "asc");
 
         rulesPageState.rules = result;
 
