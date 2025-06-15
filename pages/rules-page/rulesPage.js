@@ -339,18 +339,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         tbody.querySelectorAll('tr').forEach(row => {
             row.addEventListener('dragstart', (e) => {
                 draggedRow = row;
-                setTimeout(() => {
-                    row.classList.add('dragging');
-                }, 0);
+                row.classList.add('dragging');
             });
 
             row.addEventListener('dragend', () => {
-                setTimeout(() => {
-                    row.classList.remove('dragging');
-                    draggedRow = null;
+                row.classList.remove('dragging');
+                draggedRow = null;
 
-                    updateRulesOrderFromTable();
-                }, 0);
+                updateRulesOrderFromTable();
             });
 
             row.addEventListener('dragover', (e) => {

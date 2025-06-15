@@ -73,6 +73,13 @@ const RulesService = {
 
         let results = await rulesStore.select(filters);
 
+        results = results.map(item => {
+            return {
+                ...item,
+                rule: RegexUtils.unscapeStringForRegex(item.rule)
+            }
+        });
+
         if (orderBy) {
             results = results.sort((a, b) => {
                 if (a[orderBy] < b[orderBy]) return orderDirection === "asc" ? -1 : 1;

@@ -14,5 +14,5 @@
     text-align: left;
 }
 #tb-rules tr.dragging {
-    background-color: #ccc;
+    background-color: var(--color-accent);
 }
